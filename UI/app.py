@@ -1,6 +1,8 @@
 import os
 from werkzeug.utils import secure_filename
-from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, flash, session, send_from_directory, jsonify
+
+from analyse_sound import *
 
 app = Flask(__name__)
 app.secret_key = "your_secret_key_here"
@@ -62,6 +64,49 @@ def upload():
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+@app.route("/analyse", methods=["GET", "POST"])
+def analyse():
+    if 'username' not in session:
+        flash("Please log in to access this page.", category="error")
+        return redirect(url_for("signin"))
+
+    file = ""
+    if request.method == "GET":
+        file = session['video_file']
+
+        if file == '':
+            flash("No selected file.", category="error")
+            return redirect(request.url)
+        
+        preds, interps = analyse_audio(file)
+
+        preds_str = list(map(lambda x: id2label[x], preds))
+
+        session["preds_str"] = preds_str
+        session["interps"] = interps
+        session['curr_pred'] = preds_str[0]
+        session['curr_interps'] = interps[0]
+
+    return render_template("upload.html")
+
+@app.route('/slider_update', methods=['POST', 'GET'])
+def slider():
+    if request.method == "POST":
+        received_data = request.get_json()
+        idx = int(received_data['idx'])
+        print(idx, session["preds_str"])
+        curr_pred = session["preds_str"][idx]
+        curr_interps = session["interps"][idx]
+        
+        print(curr_pred, curr_interps)
+        body = {
+            "pred": curr_pred,
+            "data": curr_interps
+        }
+        return jsonify(body)
+        # return body
+
 
 @app.route("/logout")
 def logout():
