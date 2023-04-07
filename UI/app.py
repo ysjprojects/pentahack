@@ -7,6 +7,13 @@ app.secret_key = "your_secret_key_here"
 app.config['UPLOAD_FOLDER'] = 'uploads'
 app.config['ALLOWED_EXTENSIONS'] = {'mp4', 'avi', 'mov', 'mkv', 'wmv'}
 
+
+UPLOAD_DIR = "uploads"
+
+# Create the file system
+if not os.path.isdir(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR)
+
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 

@@ -9,7 +9,6 @@ imutils
 ipykernel
 Ipython
 jupyter
-librosa
 nltk
 numpy
 pandas
@@ -18,7 +17,6 @@ opencv-python
 opencv-python-headless
 Pillow
 # pytesseract
-pydub
 PyYAML
 seaborn
 scikit-learn == 1.0.2
@@ -29,6 +27,7 @@ requests
 regex
 vaderSentiment
 xgboost
+
 lmdb
 natsort
 editdistance
