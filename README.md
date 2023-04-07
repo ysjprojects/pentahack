@@ -4,16 +4,12 @@
 - [Pentahack](#Pentahack)
   - [Table of Contents](#table-of-contents)
   <!-- - [Project Overview](#project-overview) -->
+  - [Demo](#Demo)
   - [Requirements](#Requirements)
   - [Project Structure](#project-structure)
-  - [Notes](#notes)
-  <!-- - [Installation](#installation-/-usage) -->
-  - [Usage](#usage)
-  - [Minikube & Services](#minikube--services)
-    - [Starting Minikube Kubernetes Cluster](#starting-minikube-kubernetes-cluster)
-    - [Enabling MLOps Suite Services](#enabling-mlops-suite-services)
-      - [Enabling model_deployer service](#enabling-model_deployer-service)
-    - [Stopping Minikube Kubernetes Cluster](#stopping-minikube-kubernetes-cluster)
+
+## Demo
+<video src='assets/PentaHack_Demo.mov' width=180/>
 
 ## Requirements
 1. Python 3.8
@@ -22,10 +18,10 @@
 ## Project Structure
 ```
 .
-├── backend                 <- Flask backend
-│   ├── Dockerfile          <- for dockerising Flask backend
+├── UI                      <- Flask App
+│   ├── CV                  <- CV Eye detection functionality
 │   ├── main.py
-│   ├── 
-│   └── sql                 <- contains sql scripts
-└── docker-compose          <- docker compose file for MLOps Suite
+│   ├── analyse_sound.py    <- Speech emotion detection 
+│   └── requirements.txt    
+└── audio_classification    <- Speech emotion detection experiments
 ```
