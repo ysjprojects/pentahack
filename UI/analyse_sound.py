@@ -27,7 +27,7 @@ id2label = {
 
 label2id = {y:x for x, y in id2label.items()}
 
-UPLOAD_DIR = os.path.abspath("upload")
+UPLOAD_DIR = os.path.abspath("uploads")
 
 def predict_emotion(wave_data):
     # sig, sr = librosa.load(audio_file)
@@ -36,31 +36,23 @@ def predict_emotion(wave_data):
     # sound_array = np.array(wav_data.get_array_of_samples())
 
     input = feature_extractor(
-        raw_speech=wav_data,
+        raw_speech=wave_data,
         sampling_rate=16000,
         padding=True,
         return_tensors="pt")
 
     result = model1.forward(input.input_values.float())
     # making sense of the result 
-    id2label = {
-        "0": "angry",
-        "1": "calm",
-        "2": "disgust",
-        "3": "fearful",
-        "4": "happy",
-        "5": "neutral",
-        "6": "sad",
-        "7": "surprised"
-    }
+
     interp = dict(zip(id2label.values(), list(round(float(i),4) for i in result[0][0])))
 
     pred = np.argmax(result[0][0].detach().numpy())
     return pred, interp
 
-def analyse(filename):
-    ext = filename.split(".")[1]
+def analyse_audio(filename):
+    file, ext = filename.split(".")
     file_path = os.path.join(UPLOAD_DIR, filename)
+    # print(file_path)
     if not os.path.isfile(file_path):
         print("[ERROR] Audio script: File not found")
         return 
@@ -68,4 +60,24 @@ def analyse(filename):
         audio = AudioSegment.from_file(file_path, format="mp4")
     elif ext == "wav":
         audio = AudioSegment.from_file(filename, format = "wav")
+
+    
+    chunk_length_ms = 1000
+    chunks = make_chunks(audio, chunk_length_ms)
+
+    preds = []
+    interps = []
+    for chunk in chunks[:]:
+        pred, interp = predict_emotion(np.array(chunk.get_array_of_samples()))
+        preds.append(pred)
+        interps.append(interp)
+    return preds, interps
+
+
+if __name__ == "__main__":
+    preds, interps = analyse_audio("video1.mp4")
+    print(preds)
+    
+    
+
     

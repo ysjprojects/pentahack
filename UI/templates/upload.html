@@ -28,6 +28,100 @@
                     <source src="{{ url_for('uploaded_file', filename=session['video_file']) }}" type="video/mp4">
                     Your browser does not support the video tag.
                 </video>
+                <form action="/analyse" method="get">
+                    <input type="submit" id="analyse" name="analyse" value="Analyse" class="btn btn-primary">
+                    
+                </form>
+                {% endif %}
+                {% if session.get('preds_str') %}
+                <h2>Prediction</h2>
+                <form method = 'POST'>
+                    <div class="rangeslider"> 
+                        <input type="range" min="0" max={{session['preds_str']|length - 1}} value="0" class="myslider" id="sliderRange"> 
+                        <p>
+                            <span id="emotion">Emotion:</span>
+                            <span id="curr_pred_str">{{session['preds_str'][0]}}</span>
+                        </p> 
+                        
+                        <p>
+                            <span id="details">Details</span>
+                        </p> 
+                        <ul>
+                            <li>Angry: <span id="angry">{{session['interps'][0]['angry']}}</span></li>
+                            <li>Calm: <span id="calm">{{session['interps'][0]['calm']}}</span></li>
+                            <li>Digust: <span id="disgust">{{session['interps'][0]['disgust']}}</span></li>
+                            <li>Fearful: <span id="fearful">{{session['interps'][0]['fearful']}}</span></li>
+                            <li>Happy: <span id="happy">{{session['interps'][0]['happy']}}</span></li>
+                            <li>Neutral: <span id="neutral">{{session['interps'][0]['neutral']}}</span></li>
+                            <li>Sad: <span id="sad">{{session['interps'][0]['sad']}}</span></li>
+                            <li>Surprised: <span id="surprised">{{session['interps'][0]['surprised']}}</span></li>
+                        </ul>
+                    </div> 
+                        
+                        <script> 
+                            const Http = new XMLHttpRequest();
+                            var rangeslider = document.getElementById("sliderRange"); 
+                            var output = document.getElementById("curr_pred_str"); 
+                            var angry = document.getElementById("angry");
+                            var calm = document.getElementById("calm");
+                            var disgust = document.getElementById("disgust");
+                            var fearful = document.getElementById("fearful");
+                            var happy = document.getElementById("happy");
+                            var neutral = document.getElementById("neutral");
+                            var sad = document.getElementById("sad");
+                            var surprised = document.getElementById("surprised"); 
+                            var current = 0;
+                                        
+                            rangeslider.oninput = function() {
+                                current = this.value;
+                                
+                                // if (current < 33){
+                                //     output.innerHTML = 'Reverse';
+                                //     current = 'reverse'
+                                //     }
+                                // else if (current >= 33 && current <= 66){
+                                //     output.innerHTML = 'Neutral';
+                                //     current = 'neutral'  
+                                // }
+                                // else if (current > 66){
+                                //     output.innerHTML = 'Drive';
+                                //     current = 'drive'
+                                // }
+                            
+                                // I've added this call to the server, which send 'current' value
+                                // Http.open('POST', '/slider_update')
+                                // Http.send(current)
+                                // console.log(JSON.stringify({idx: current}))
+                                fetch('/slider_update', 
+                                    {
+                                        headers: {
+                                        'Accept': 'application/json',
+                                        'Content-Type': 'application/json'
+                                        },
+                                        method: "POST",
+                                        body: JSON.stringify({idx: current})
+                                    }
+                                )
+                                .then(resp => resp.json())
+                                .then((data) => {
+                                    console.log(data)
+                                    output.innerHTML = data["pred"]
+                                    angry.innerHTML  = data['data']['angry']
+                                    calm.innerHTML  = data['data']['calm']
+                                    disgust.innerHTML  = data['data']['disgust']
+                                    fearful.innerHTML  = data['data']['fearful']
+                                    happy.innerHTML  = data['data']['happy']
+                                    neutral.innerHTML  = data['data']['neutral']
+                                    sad.innerHTML  = data['data']['sad']
+                                    surprised.innerHTML  = data['data']['surprised'];
+                                })
+                                
+                            }
+                
+                        </script> 
+                
+                
+                    </form>
                 {% endif %}
             </div>
         </div>
