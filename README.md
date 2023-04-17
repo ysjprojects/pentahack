@@ -2,11 +2,17 @@
 
 ## Table of Contents
 - [Pentahack](#pentahack)
-  - [Table of Contents](#table-of-contents)
   <!-- - [Project Overview](#project-overview) -->
+  - [Pitch Deck](#pitch-deck)
   - [Demo](#demo)
   - [Requirements](#requirements)
   - [Project Structure](#project-structure)
+ 
+## Pitch Deck
+
+
+[SpeechCoach Pitch Deck](Pitch%20Deck.pdf)
+ 
 
 ## Demo
 
@@ -16,7 +22,6 @@ https://user-images.githubusercontent.com/71161486/230645129-2636539f-fd6c-4596-
 
 ## Requirements
 1. Python 3.8
-2. 
 
 ## Project Structure
 ```
